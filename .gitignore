@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# Object files
+*.o
+*.bin
+*.elf
+
+# Build artifacts
+*.img
+*.iso
+
