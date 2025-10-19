@@ -35,6 +35,7 @@ make clean    # Clean build files
   * kmalloc() function with page alignment support
   * memory_copy() and memory_set() utilities
   * Basic heap starting at a fixed address
+  * [TODO] free()
 
 - [x] **Standard Library (libc)**
   * String functions: strlen, strcmp, append, backspace, reverse
@@ -45,7 +46,11 @@ make clean    # Clean build files
   * Port I/O functions (byte and word operations)
   * Interrupt-driven keyboard input
   * Text output to VGA display
+  * Support lower case text and upper case
 
 - [x] **Shell/Command Interface**
   * Command parser with argument support
-  * Commands: HELP, CLEAR, ECHO, EXIT
+  * Commands: HELP, CLEAR, ECHO, EXIT, [TODO] MEMORY, TIME
+  * [TODO] Custom shell colors
+  * [TODO] Shell command history
+  * [TODO] Tabulations to propose commands / args

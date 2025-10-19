@@ -30,15 +30,15 @@ void shell_exit(char *args) {
 }
 
 void unknown_command() {
-    kprint("Unknown command. Type 'HELP' for available commands.\n");
+    kprint("Unknown command. Type 'help' for available commands.\n");
 }
 
 /* Command table - defined AFTER the functions so they exist */
 command_t commands[] = {
-    {"HELP", help, "Show this help message"},
-    {"CLEAR", clear, "Clear the screen"},
-    {"ECHO", echo, "Print a message"},
-    {"EXIT", shell_exit, "Halt the CPU"}
+    {"help", help, "Show this help message"},
+    {"clear", clear, "Clear the screen"},
+    {"echo", echo, "Print a message"},
+    {"exit", shell_exit, "Halt the CPU"}
 };
 
 /* Main command parser */
