@@ -11,15 +11,15 @@ static int history_count = 0;
 static int history_index = 0;
 static int current_history_pos = 0;
 
-/* Prompt color */
-static char prompt_color = WHITE_ON_BLACK;
+/* Input color (for what the user types) */
+static char input_color = WHITE_ON_BLACK;
 
 void main() {
     isr_install();
     irq_install();
 
     clear_screen();
-    kprint_color(PROMPT_TEXT, prompt_color);
+    kprint_color(PROMPT_TEXT, WHITE_ON_BLACK);
 }
 
 void add_to_history(char *cmd) {
@@ -74,17 +74,17 @@ char* tab_complete(char *partial) {
     return NULL;
 }
 
-char get_prompt_color() {
-    return prompt_color;
+char get_input_color() {
+    return input_color;
 }
 
-void set_prompt_color(char color) {
-    prompt_color = color;
+void set_input_color(char color) {
+    input_color = color;
 }
 
 void user_input(char *input) {
     add_to_history(input);
     current_history_pos = history_count;
     command_parser(input);
-    kprint_color(PROMPT_TEXT, prompt_color);
+    kprint_color(PROMPT_TEXT, WHITE_ON_BLACK);
 }

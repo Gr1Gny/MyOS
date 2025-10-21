@@ -43,14 +43,14 @@ static void set_input_to(char *new_input) {
     /* Remove extra tail from current */
     for (s32 j = cur_len; j > i; j--) {
         backspace(key_buffer);
-        kprint_backspace();
+        kprint_backspace_color(get_input_color());
     }
     /* Append missing suffix */
     for (s32 j = i; j < new_len; j++) {
         char ch = new_input[j];
         append(key_buffer, ch);
         char out[2] = {ch, '\0'};
-        kprint(out);
+        kprint_color(out, get_input_color());
     }
 }
 
@@ -114,7 +114,7 @@ static void keyboard_callback(registers_t regs) {
                 char ch = completed[cur_len + i];
                 append(key_buffer, ch);
                 char out[2] = {ch, '\0'};
-                kprint(out);
+                kprint_color(out, get_input_color());
                 i++;
             }
         }
@@ -130,7 +130,7 @@ static void keyboard_callback(registers_t regs) {
     if (scancode == SC_BACKSPACE) {
         if (strlen(key_buffer) > 0) {
             backspace(key_buffer);
-            kprint_backspace();
+            kprint_backspace_color(get_input_color());
         }
     } else if (scancode == SC_ENTER) {
         kprint("\n");
@@ -147,7 +147,7 @@ static void keyboard_callback(registers_t regs) {
         /* Print and append to buffer */
         char str[2] = {letter, '\0'};
         append(key_buffer, letter);
-        kprint(str);
+        kprint_color(str, get_input_color());
     }
     UNUSED(regs);
 }

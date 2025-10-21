@@ -53,5 +53,6 @@ void kprint_at(char *message, s32 col, s32 row, char attr);
 void kprint(char *message);
 void kprint_color(char *message, char attr);
 void kprint_backspace();
+void kprint_backspace_color(char attr);
 
 #endif

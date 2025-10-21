@@ -59,6 +59,20 @@ void kprint_backspace() {
     print_char(CHAR_BACKSPACE, col, row, WHITE_ON_BLACK);
 }
 
+void kprint_backspace_color(char attr) {
+    s32 cur = get_cursor_offset();
+    s32 row = get_offset_row(cur);
+    s32 col = get_offset_col(cur);
+    if (row == 0 && col == 0) return;
+    if (col == 0) {
+        row -= 1;
+        col = MAX_COLS - 1;
+    } else {
+        col -= 1;
+    }
+    print_char(CHAR_BACKSPACE, col, row, attr ? attr : WHITE_ON_BLACK);
+}
+
 /**
  * Innermost print function for our kernel, directly accesses the video memory 
  *

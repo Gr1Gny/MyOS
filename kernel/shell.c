@@ -7,10 +7,10 @@ extern command_t commands[];
 
 void help(char *args) {
     for (int i = 0; i < NUM_COMMANDS; i++) {
-        kprint(commands[i].name);
-        kprint(" - ");
-        kprint(commands[i].description);
-        kprint("\n");
+        kprint_color(commands[i].name, get_input_color());
+        kprint_color(" - ", get_input_color());
+        kprint_color(commands[i].description, get_input_color());
+        kprint_color("\n", get_input_color());
     }
 }
 
@@ -20,20 +20,20 @@ void clear(char *args) {
 
 void echo(char *args) {
     if (args != NULL) {
-        kprint(args);
+        kprint_color(args, get_input_color());
     }
-    kprint("\n");
+    kprint_color("\n", get_input_color());
 }
 
 void shell_exit(char *args) {
-    kprint("Halting CPU...\n");
+    kprint_color("Halting CPU...\n", get_input_color());
     __asm__ __volatile__("hlt");
 }
 
 void prompt(char *args) {
     if (args == NULL) {
-        kprint("Usage: prompt <color>\n");
-        kprint("Colors: green, blue, red, cyan, yellow, magenta, white\n");
+        kprint_color("Usage: prompt <color>\n", get_input_color());
+        kprint_color("Colors: green, blue, red, cyan, yellow, magenta, white\n", get_input_color());
         return;
     }
     
@@ -46,16 +46,15 @@ void prompt(char *args) {
     else if (strcmp(args, "magenta") == 0) color = MAGENTA_ON_BLACK;
     else if (strcmp(args, "white") == 0) color = WHITE_ON_BLACK;
     else {
-        kprint("Unknown color. Available: green, blue, red, cyan, yellow, magenta, white\n");
+        kprint_color("Unknown color. Available: green, blue, red, cyan, yellow, magenta, white\n", get_input_color());
         return;
     }
     
-    set_prompt_color(color);
-    kprint("Prompt color changed!\n");
+    set_input_color(color);
 }
 
 void unknown_command() {
-    kprint("Unknown command. Type 'help' for available commands.\n");
+    kprint_color("Unknown command. Type 'help' for available commands.\n", get_input_color());
 }
 
 /* Command table - defined AFTER the functions so they exist */
