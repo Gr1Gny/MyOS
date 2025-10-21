@@ -5,7 +5,7 @@
 
 /* Keyboard hardware constants */
 #define KEYBOARD_DATA_PORT 0x60      /* PS/2 keyboard data port */
-#define KEYBOARD_STATUS_PORT 0x64    /* PS/2 keyboard status port */
+/* #define KEYBOARD_STATUS_PORT 0x64 */ /* Unused */
 
 /* Keyboard buffer size */
 #define KEY_BUFFER_SIZE 256
@@ -14,6 +14,7 @@
 extern char key_buffer[KEY_BUFFER_SIZE];
 
 /* Scancode constants */
+#define SC_EXTENDED_PREFIX 0xE0
 #define SC_BACKSPACE 0x0E
 #define SC_TAB 0x0F
 #define SC_ENTER 0x1C

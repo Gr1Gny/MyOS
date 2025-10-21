@@ -2,6 +2,7 @@
 #define KERNEL_H
 
 #define HISTORY_SIZE 10
+#define PROMPT_TEXT "MyOs> "
 
 void user_input(char *input);
 void add_to_history(char *cmd);

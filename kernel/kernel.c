@@ -19,7 +19,7 @@ void main() {
     irq_install();
 
     clear_screen();
-    kprint_color("MyOs> ", prompt_color);
+    kprint_color(PROMPT_TEXT, prompt_color);
 }
 
 void add_to_history(char *cmd) {
@@ -86,5 +86,5 @@ void user_input(char *input) {
     add_to_history(input);
     current_history_pos = history_count;
     command_parser(input);
-    kprint_color("MyOs> ", prompt_color);
+    kprint_color(PROMPT_TEXT, prompt_color);
 }
