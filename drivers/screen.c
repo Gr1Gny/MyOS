@@ -14,8 +14,10 @@ s32 get_offset_col(s32 offset);
  * Print a message on the specified location
  * If col, row, are negative, we will use the current offset
  */
-void kprint_at(char *message, s32 col, s32 row) {
+void kprint_at(char *message, s32 col, s32 row, char attr) {
     s32 offset;
+    if (!attr) attr = WHITE_ON_BLACK;
+
     if (col >= 0 && row >= 0)
         offset = get_offset(col, row);
     else {
@@ -26,20 +28,34 @@ void kprint_at(char *message, s32 col, s32 row) {
 
     s32 i = 0;
     while (message[i] != 0) {
-        offset = print_char(message[i++], col, row, WHITE_ON_BLACK);
+        offset = print_char(message[i++], col, row, attr);
         row = get_offset_row(offset);
         col = get_offset_col(offset);
     }
 }
 
 void kprint(char *message) {
-    kprint_at(message, USE_CURRENT_POS, USE_CURRENT_POS);
+    kprint_at(message, USE_CURRENT_POS, USE_CURRENT_POS, WHITE_ON_BLACK);
+}
+
+void kprint_color(char *message, char attr) {
+    if (!attr) attr = WHITE_ON_BLACK;
+    kprint_at(message, USE_CURRENT_POS, USE_CURRENT_POS, attr);
 }
 
 void kprint_backspace() {
-    s32 offset = get_cursor_offset() - BYTES_PER_CHAR;
-    s32 row = get_offset_row(offset);
-    s32 col = get_offset_col(offset);
+    s32 cur = get_cursor_offset();
+    s32 row = get_offset_row(cur);
+    s32 col = get_offset_col(cur);
+    /* If at screen origin, nothing to delete */
+    if (row == 0 && col == 0) return;
+    /* If at column 0, move to end of previous line */
+    if (col == 0) {
+        row -= 1;
+        col = MAX_COLS - 1;
+    } else {
+        col -= 1;
+    }
     print_char(CHAR_BACKSPACE, col, row, WHITE_ON_BLACK);
 }
 

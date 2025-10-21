@@ -1,6 +1,7 @@
 #include "shell.h"
 #include "../drivers/screen.h"
 #include "../libc/string.h"
+#include "kernel.h"
 
 extern command_t commands[];
 
@@ -29,6 +30,30 @@ void shell_exit(char *args) {
     __asm__ __volatile__("hlt");
 }
 
+void prompt(char *args) {
+    if (args == NULL) {
+        kprint("Usage: prompt <color>\n");
+        kprint("Colors: green, blue, red, cyan, yellow, magenta, white\n");
+        return;
+    }
+    
+    char color = WHITE_ON_BLACK;
+    if (strcmp(args, "green") == 0) color = GREEN_ON_BLACK;
+    else if (strcmp(args, "blue") == 0) color = BLUE_ON_BLACK;
+    else if (strcmp(args, "red") == 0) color = RED_ON_BLACK;
+    else if (strcmp(args, "cyan") == 0) color = CYAN_ON_BLACK;
+    else if (strcmp(args, "yellow") == 0) color = YELLOW_ON_BLACK;
+    else if (strcmp(args, "magenta") == 0) color = MAGENTA_ON_BLACK;
+    else if (strcmp(args, "white") == 0) color = WHITE_ON_BLACK;
+    else {
+        kprint("Unknown color. Available: green, blue, red, cyan, yellow, magenta, white\n");
+        return;
+    }
+    
+    set_prompt_color(color);
+    kprint("Prompt color changed!\n");
+}
+
 void unknown_command() {
     kprint("Unknown command. Type 'help' for available commands.\n");
 }
@@ -38,6 +63,7 @@ command_t commands[] = {
     {"help", help, "Show this help message"},
     {"clear", clear, "Clear the screen"},
     {"echo", echo, "Print a message"},
+    {"prompt", prompt, "Change prompt color"},
     {"exit", shell_exit, "Halt the CPU"}
 };
 

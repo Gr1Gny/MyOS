@@ -9,7 +9,10 @@
 /* Shift key state */
 static u8 shift_pressed = 0;
 
-static char key_buffer[KEY_BUFFER_SIZE];
+/* Track extended scancode prefix (0xE0) */
+static u8 extended_code = 0;
+
+char key_buffer[KEY_BUFFER_SIZE];
 
 const char *sc_name[] = { "ERROR", "Esc", "1", "2", "3", "4", "5", "6", 
     "7", "8", "9", "0", "-", "=", "Backspace", "Tab", "Q", "W", "E", 
@@ -36,9 +39,62 @@ const char sc_ascii_upper[] = {
     '?', ' '
 };
 
+/* Safely set current input to new_input by editing in-place */
+static void set_input_to(char *new_input) {
+    s32 cur_len = strlen(key_buffer);
+    s32 new_len = strlen(new_input);
+    s32 i = 0;
+    while (i < cur_len && i < new_len && key_buffer[i] == new_input[i]) i++;
+    /* Remove extra tail from current */
+    for (s32 j = cur_len; j > i; j--) {
+        backspace(key_buffer);
+        kprint_backspace();
+    }
+    /* Append missing suffix */
+    for (s32 j = i; j < new_len; j++) {
+        char ch = new_input[j];
+        append(key_buffer, ch);
+        char out[2] = {ch, '\0'};
+        kprint(out);
+    }
+}
+
 static void keyboard_callback(registers_t regs) {
     u8 scancode = port_byte_in(KEYBOARD_DATA_PORT);
-    
+
+    /* Handle extended scancode prefix */
+    if (scancode == 0xE0) {
+        extended_code = 1;
+        UNUSED(regs);
+        return;
+    }
+
+    /* If previous byte was 0xE0, handle extended keys (arrows) */
+    if (extended_code) {
+        extended_code = 0;
+        /* Ignore key releases (high bit set) */
+        if (scancode & 0x80) {
+            UNUSED(regs);
+            return;
+        }
+        if (scancode == SC_UP_ARROW) {
+            char *prev_cmd = get_history(-1);
+            if (prev_cmd != NULL) set_input_to(prev_cmd);
+            UNUSED(regs);
+            return;
+        }
+        if (scancode == SC_DOWN_ARROW) {
+            char *next_cmd = get_history(1);
+            if (next_cmd != NULL) set_input_to(next_cmd);
+            else set_input_to("");
+            UNUSED(regs);
+            return;
+        }
+        /* Unhandled extended key */
+        UNUSED(regs);
+        return;
+    }
+
     /* Handle Shift key press */
     if (scancode == SC_LSHIFT || scancode == SC_RSHIFT) {
         shift_pressed = 1;
@@ -52,15 +108,35 @@ static void keyboard_callback(registers_t regs) {
         UNUSED(regs);
         return;
     }
-    
+
+    /* Handle tab (command completion) */
+    if (scancode == SC_TAB) {
+        char *completed = tab_complete(key_buffer);
+        if (completed != NULL) {
+            s32 cur_len = strlen(key_buffer);
+            s32 i = 0;
+            while (completed[cur_len + i] != '\0') {
+                char ch = completed[cur_len + i];
+                append(key_buffer, ch);
+                char out[2] = {ch, '\0'};
+                kprint(out);
+                i++;
+            }
+        }
+        UNUSED(regs);
+        return;
+    }
+
     if (scancode > SC_MAX) {
         UNUSED(regs);
         return;
     }
     
     if (scancode == SC_BACKSPACE) {
-        backspace(key_buffer);
-        kprint_backspace();
+        if (strlen(key_buffer) > 0) {
+            backspace(key_buffer);
+            kprint_backspace();
+        }
     } else if (scancode == SC_ENTER) {
         kprint("\n");
         user_input(key_buffer);

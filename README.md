@@ -41,9 +41,8 @@ make clean    # Clean build files
   * Cursor positioning and scrolling
   * Basic color support
   * Backspace handling
-  * [TODO] kprint_color() function for colored output
+  * kprint_color() function for colored output
   * [TODO] kprintf() for formatted printing
-  * [TODO] Scrollback buffer
 
 - [x] **Memory Management**
   * kmalloc() function with page alignment support
@@ -62,6 +61,6 @@ make clean    # Clean build files
   * Command parser with argument support
   * Commands: help, clear, echo, exit
   * [TODO] Additional commands: mem, time, uptime, version, reboot
-  * [TODO] Command history (up/down arrows)
-  * [TODO] Tab completion
-  * [TODO] Custom shell colors/prompt
+  * Command history (up/down arrows) - Use arrow keys to navigate through command history
+  * Tab completion - Press Tab to autocomplete commands
+  * Custom shell colors/prompt - Use 'prompt <color>' command

@@ -10,5 +10,7 @@ s32 strlen(char s[]);
 void backspace(char s[]);
 void append(char s[], char n);
 s32 strcmp(char s1[], char s2[]);
+void strcpy(char dest[], char src[]);
+s32 strncmp(char s1[], char s2[], s32 n);
 
 #endif

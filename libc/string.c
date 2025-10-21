@@ -68,3 +68,21 @@ s32 strcmp(char s1[], char s2[]) {
     }
     return s1[i] - s2[i];
 }
+
+void strcpy(char dest[], char src[]) {
+    s32 i = 0;
+    while (src[i] != '\0') {
+        dest[i] = src[i];
+        i++;
+    }
+    dest[i] = '\0';
+}
+
+s32 strncmp(char s1[], char s2[], s32 n) {
+    s32 i;
+    for (i = 0; i < n && s1[i] == s2[i]; i++) {
+        if (s1[i] == '\0') return 0;
+    }
+    if (i == n) return 0;
+    return s1[i] - s2[i];
+}
