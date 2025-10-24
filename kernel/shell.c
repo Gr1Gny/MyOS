@@ -2,6 +2,7 @@
 #include "../drivers/screen.h"
 #include "../libc/string.h"
 #include "kernel.h"
+#include "../libc/function.h"
 
 extern command_t commands[];
 
@@ -12,6 +13,7 @@ void help(char *args) {
         kprint_color(commands[i].description, get_input_color());
         kprint_color("\n", get_input_color());
     }
+    UNUSED(args);
 }
 
 void clear(char *args) {
@@ -23,11 +25,13 @@ void echo(char *args) {
         kprint_color(args, get_input_color());
     }
     kprint_color("\n", get_input_color());
+    UNUSED(args);
 }
 
 void shell_exit(char *args) {
     kprint_color("Halting CPU...\n", get_input_color());
     __asm__ __volatile__("hlt");
+    UNUSED(args);
 }
 
 void prompt(char *args) {

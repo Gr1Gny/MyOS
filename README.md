@@ -63,4 +63,11 @@ make clean    # Clean build files
   * [TODO] Additional commands: mem, time, uptime, version, reboot
   * Command history (up/down arrows) - Use arrow keys to navigate through command history
   * Tab completion - Press Tab to autocomplete commands
-  * Custom shell colors/prompt - Use 'prompt <color>' command
+  * Custom typing/output color - Use 'prompt <color>' command
+
+- [ ] **Paging & Virtual Memory**
+  * [TODO] Set up page tables and page directory
+  * [TODO] Enable paging (CR0 register)
+  * [TODO] Implement page fault handler (ISR 14)
+  * [TODO] Virtual memory mapping (identity mapping first)
+  * [TODO] Proper page frame allocator

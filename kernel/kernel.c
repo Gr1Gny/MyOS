@@ -4,6 +4,7 @@
 #include "../libc/string.h"
 #include "kernel.h"
 #include "shell.h"
+#include "../cpu/paging.h"
 
 /* Command history */
 static char history[HISTORY_SIZE][256];
@@ -17,6 +18,9 @@ static char input_color = WHITE_ON_BLACK;
 void main() {
     isr_install();
     irq_install();
+
+    init_paging();
+    enable_paging();
 
     clear_screen();
     kprint_color(PROMPT_TEXT, WHITE_ON_BLACK);
