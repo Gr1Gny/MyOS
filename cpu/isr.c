@@ -5,6 +5,7 @@
 #include "../libc/string.h"
 #include "timer.h"
 #include "ports.h"
+#include "paging.h"
 
 isr_t interrupt_handlers[MAX_INTERRUPTS];
 
@@ -177,4 +178,7 @@ void irq_install() {
     init_timer(50);
     /* IRQ1: keyboard */
     init_keyboard();
+    /* IRQ14: page fault */
+    init_paging();
+    enable_paging();
 }

@@ -66,8 +66,8 @@ make clean    # Clean build files
   * Custom typing/output color - Use 'prompt <color>' command
 
 - [ ] **Paging & Virtual Memory**
-  * [TODO] Set up page tables and page directory
-  * [TODO] Enable paging (CR0 register)
-  * [TODO] Implement page fault handler (ISR 14)
-  * [TODO] Virtual memory mapping (identity mapping first)
+  * Set up page tables and page directory
+  * Enable paging (CR0 register)
+  * Implement page fault handler (ISR 14)
+  * Virtual memory mapping (identity mapping first)
   * [TODO] Proper page frame allocator

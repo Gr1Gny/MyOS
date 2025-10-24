@@ -2,6 +2,7 @@
 #define PAGING_H
 
 #include "types.h"
+#include "isr.h"
 
 #define PAGE_PRESENT   0x1
 #define PAGE_WRITABLE  0x2
@@ -22,5 +23,6 @@ extern page_directory_t* kernel_directory;
 
 void init_paging();
 void enable_paging();
+void page_fault_handler(registers_t regs);
 
 #endif
