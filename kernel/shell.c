@@ -3,6 +3,7 @@
 #include "../libc/string.h"
 #include "kernel.h"
 #include "../libc/function.h"
+#include "../cpu/paging.h"
 
 extern command_t commands[];
 
@@ -57,6 +58,41 @@ void prompt(char *args) {
     set_input_color(color);
 }
 
+void mem(char *args) {
+    UNUSED(args);
+    
+    u32 used = get_used_frame_count();
+    u32 free = get_free_frame_count();
+    u32 total = used + free;
+    
+    char num_str[16];
+    
+    kprint_color("Memory Statistics:\n", get_input_color());
+    kprint_color("  Total frames: ", get_input_color());
+    int_to_ascii(total, num_str);
+    kprint_color(num_str, get_input_color());
+    kprint_color(" (", get_input_color());
+    int_to_ascii((total * 4), num_str);
+    kprint_color(num_str, get_input_color());
+    kprint_color(" KB)\n", get_input_color());
+    
+    kprint_color("  Used frames:  ", get_input_color());
+    int_to_ascii(used, num_str);
+    kprint_color(num_str, get_input_color());
+    kprint_color(" (", get_input_color());
+    int_to_ascii((used * 4), num_str);
+    kprint_color(num_str, get_input_color());
+    kprint_color(" KB)\n", get_input_color());
+    
+    kprint_color("  Free frames:  ", get_input_color());
+    int_to_ascii(free, num_str);
+    kprint_color(num_str, get_input_color());
+    kprint_color(" (", get_input_color());
+    int_to_ascii((free * 4), num_str);
+    kprint_color(num_str, get_input_color());
+    kprint_color(" KB)\n", get_input_color());
+}
+
 void unknown_command() {
     kprint_color("Unknown command. Type 'help' for available commands.\n", get_input_color());
 }
@@ -66,7 +102,8 @@ command_t commands[] = {
     {"help", help, "Show this help message"},
     {"clear", clear, "Clear the screen"},
     {"echo", echo, "Print a message"},
-    {"prompt", prompt, "Change prompt color"},
+    {"mem", mem, "Show memory statistics"},
+    {"prompt", prompt, "Change typing color"},
     {"exit", shell_exit, "Halt the CPU"}
 };
 

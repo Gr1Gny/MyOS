@@ -34,7 +34,7 @@ make clean    # Clean build files
   * [TODO] Caps Lock support
   * [TODO] Ctrl key combinations (Ctrl+C, Ctrl+L)
   * [TODO] Arrow key navigation
-  * [TODO] Prevent backspace from erasing prompt ">"
+  * Prevent backspace from erasing prompt ">"
 
 - [x] **Screen Driver**
   * VGA text mode (80x25)
@@ -48,8 +48,7 @@ make clean    # Clean build files
   * kmalloc() function with page alignment support
   * memory_copy() and memory_set() utilities
   * Basic heap starting at a fixed address
-  * [TODO] kfree() to free allocated memory
-  * [TODO] Memory usage tracking
+  * [TODO] Add dynamic heap management
 
 - [x] **Standard Library (libc)**
   * String functions: strlen, strcmp, append, backspace, reverse
@@ -59,15 +58,26 @@ make clean    # Clean build files
 
 - [x] **Shell/Command Interface**
   * Command parser with argument support
-  * Commands: help, clear, echo, exit
-  * [TODO] Additional commands: mem, time, uptime, version, reboot
+  * Commands: help, clear, echo, mem, exit
+  * [TODO] Additional commands: time, uptime, version, reboot
   * Command history (up/down arrows) - Use arrow keys to navigate through command history
   * Tab completion - Press Tab to autocomplete commands
   * Custom typing/output color - Use 'prompt <color>' command
 
-- [ ] **Paging & Virtual Memory**
+- [x] **Paging & Virtual Memory**
   * Set up page tables and page directory
   * Enable paging (CR0 register)
   * Implement page fault handler (ISR 14)
   * Virtual memory mapping (identity mapping first)
-  * [TODO] Proper page frame allocator
+  * Physical page frame allocator (bitmap)
+  * Functions: alloc_frame(), free_frame(), get stats
+
+- [] **Process/Task Management**
+  * Store CPU state (registers, stack, ...)
+  * Save/restore CPU state
+  * Implement a simple round-robin scheduler
+  * Add concurrent execution
+
+- [] **File system**
+
+- [] **User mode**
