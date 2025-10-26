@@ -14,7 +14,9 @@
 void memory_copy(u8 *source, u8 *dest, s32 nbytes);
 void memory_set(u8 *dest, u8 val, u32 len);
 
+/* Dynamic heap allocator */
 u32 kmalloc(u32 size, u8 align, u32 *phys_addr);
-// Todo add a free function
+void kfree(void *ptr);
+void get_heap_stats(u32 *total, u32 *used, u32 *free);
 
 #endif

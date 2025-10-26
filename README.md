@@ -48,7 +48,12 @@ make clean    # Clean build files
   * kmalloc() function with page alignment support
   * memory_copy() and memory_set() utilities
   * Basic heap starting at a fixed address
-  * [TODO] Add dynamic heap management
+  * Add dynamic heap management
+  * [TODO] CR3 is expecting page aligned address so I removed heap block header for now (it is a problem as they can not be free anymore), solutions :
+  - add a padding before the page to put the header
+  - change structure and keep an address table on the side
+  - no alignment in mem.c, do it directly in the frame allocator
+  * [TODO] Overwrite size while reusing memory in the heap to avoid memory loss
 
 - [x] **Standard Library (libc)**
   * String functions: strlen, strcmp, append, backspace, reverse
@@ -73,10 +78,10 @@ make clean    # Clean build files
   * Functions: alloc_frame(), free_frame(), get stats
 
 - [] **Process/Task Management**
-  * Store CPU state (registers, stack, ...)
-  * Save/restore CPU state
-  * Implement a simple round-robin scheduler
-  * Add concurrent execution
+  * [TODO] Store CPU state (registers, stack, ...)
+  * [TODO] Save/restore CPU state
+  * [TODO] Implement a simple round-robin scheduler
+  * [TODO] Add concurrent execution
 
 - [] **File system**
 
