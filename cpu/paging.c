@@ -1,6 +1,5 @@
 #include "paging.h"
 #include "../libc/mem.h"
-#include "../libc/string.h"
 #include "../drivers/screen.h"
 
 page_directory_t* kernel_directory = 0;
@@ -36,7 +35,7 @@ void init_paging() {
     /* Link page table into page directory using physical address */
     kernel_directory->entries[0] = (phys_table_addr & 0xFFFFF000) | PAGE_PRESENT | PAGE_WRITABLE;
 
-    kprint_color("Paging structures initialized\n", GREEN_ON_BLACK);
+    kprintf_color(GREEN_ON_BLACK, "Paging structures initialized\n");
     
     init_frame_allocator();
 }
@@ -52,7 +51,7 @@ void enable_paging() {
     cr0 |= 0x80000000;
     __asm__ __volatile__("mov %0, %%cr0" :: "r"(cr0));
     
-    kprint_color("Paging enabled!\n", GREEN_ON_BLACK);
+    kprintf_color(GREEN_ON_BLACK, "Paging enabled!\n");
 }
 
 void page_fault_handler(registers_t regs) {
@@ -68,7 +67,7 @@ void page_fault_handler(registers_t regs) {
     int reserved = regs.err_code & 0x8;   /* Reserved bits overwritten? */
     int id = regs.err_code & 0x10;        /* Instruction fetch? */
     
-    kprint_color("Page Fault! (", RED_ON_BLACK);
+    kprintf_color(RED_ON_BLACK, "Page Fault! (");
     
     if (!present) kprint_color("page not present ", RED_ON_BLACK);
     if (rw) kprint_color("write ", RED_ON_BLACK);
@@ -78,14 +77,10 @@ void page_fault_handler(registers_t regs) {
     if (reserved) kprint_color("reserved ", RED_ON_BLACK);
     if (id) kprint_color("instruction-fetch ", RED_ON_BLACK);
     
-    kprint_color(") at 0x", RED_ON_BLACK);
-    char addr_str[16];
-    hex_to_ascii(faulting_address, addr_str);
-    kprint_color(addr_str, RED_ON_BLACK);
-    kprint_color("\n", RED_ON_BLACK);
+    kprintf_color(RED_ON_BLACK, ") at %x\n", faulting_address);
     
     /* Halt the system */
-    kprint_color("System halted.\n", RED_ON_BLACK);
+    kprintf_color(RED_ON_BLACK, "System halted.\n");
     __asm__ __volatile__("cli; hlt");
 }
 
@@ -141,14 +136,7 @@ void init_frame_allocator() {
         set_frame(addr);
     }
     
-    kprint_color("Frame allocator initialized: ", GREEN_ON_BLACK);
-    char num_str[16];
-    int_to_ascii(TOTAL_FRAMES, num_str);
-    kprint_color(num_str, GREEN_ON_BLACK);
-    kprint_color(" frames (", GREEN_ON_BLACK);
-    int_to_ascii(MEMORY_END / 1024 / 1024, num_str);
-    kprint_color(num_str, GREEN_ON_BLACK);
-    kprint_color(" MB)\n", GREEN_ON_BLACK);
+    kprintf_color(GREEN_ON_BLACK, "Frame allocator initialized: %d frames (%d MB)\n", TOTAL_FRAMES, MEMORY_END / 1024 / 1024);
 }
 
 u32 alloc_frame() {
@@ -160,7 +148,7 @@ u32 alloc_frame() {
         }
     }
     
-    kprint_color("ERROR: Out of physical memory!\n", RED_ON_BLACK);
+    kprintf_color(RED_ON_BLACK, "ERROR: Out of physical memory!\n");
     return 0;
 }
 

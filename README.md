@@ -42,7 +42,7 @@ make clean    # Clean build files
   * Basic color support
   * Backspace handling
   * kprint_color() function for colored output
-  * [TODO] kprintf() for formatted printing
+  * kprintf() for formatted printing
 
 - [x] **Memory Management**
   * kmalloc() function with page alignment support

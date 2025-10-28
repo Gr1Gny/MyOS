@@ -1,6 +1,8 @@
 #include "screen.h"
 #include "../cpu/ports.h"
 #include "../libc/mem.h"
+#include "../libc/string.h"
+#include "../libc/stdarg.h"
 
 /* Declaration of private functions */
 s32 get_cursor_offset();
@@ -112,12 +114,12 @@ s32 print_char(char c, s32 col, s32 row, char attr) {
     if (offset >= MAX_ROWS * MAX_COLS * BYTES_PER_CHAR) {
         s32 i;
         for (i = 1; i < MAX_ROWS; i++) 
-            memory_copy((u8*)(get_offset(0, i) + VIDEO_ADDRESS),
-                        (u8*)(get_offset(0, i - 1) + VIDEO_ADDRESS),
+            memory_copy(((u8*)VIDEO_ADDRESS + get_offset(0, i)),
+                        ((u8*)VIDEO_ADDRESS + get_offset(0, i - 1)),
                         MAX_COLS * BYTES_PER_CHAR);
 
         /* Blank last line */
-        char *last_line = (char*) (get_offset(0, MAX_ROWS - 1) + (u8*) VIDEO_ADDRESS);
+        char *last_line = (char*) ((u8*)VIDEO_ADDRESS + get_offset(0, MAX_ROWS - 1));
         for (i = 0; i < MAX_COLS * BYTES_PER_CHAR; i++) last_line[i] = 0;
 
         offset -= BYTES_PER_CHAR * MAX_COLS;
@@ -167,4 +169,118 @@ s32 get_offset_row(s32 offset) {
 
 s32 get_offset_col(s32 offset) { 
     return (offset / BYTES_PER_CHAR) % MAX_COLS; 
+}
+
+void kprintf_color(char attr, char *fmt, ...) {
+    if (!attr) attr = WHITE_ON_BLACK;
+    va_list args;
+    va_start(args, fmt);
+
+    for (char *p = fmt; *p; ++p) {
+        if (*p != '%') {
+            print_char(*p, USE_CURRENT_POS, USE_CURRENT_POS, attr);
+            continue;
+        } 
+
+        ++p;
+        if (!*p) break;
+
+        switch (*p) {
+            case 's': {
+                char *s = va_arg(args, char*);
+                if (!s) s = "(null)";
+                kprint_color(s, attr);
+                break;
+            }
+            case 'd': {
+                s32 v = va_arg(args, s32);
+                char buf[16];
+                buf[0] = '\0';
+                int_to_ascii(v, buf);
+                kprint_color(buf, attr);
+                break;
+            }
+            case 'x': {
+                s32 v = va_arg(args, s32);
+                char buf[16];
+                buf[0] = '\0';
+                hex_to_ascii(v, buf);
+                kprint_color(buf, attr);
+                break;
+            }
+            case 'c': {
+                int c = va_arg(args, int);
+                print_char((char)c, USE_CURRENT_POS, USE_CURRENT_POS, attr);
+                break;
+            }
+            case '%': {
+                print_char('%', USE_CURRENT_POS, USE_CURRENT_POS, attr);
+                break;
+            }
+            default: {
+                print_char('%', USE_CURRENT_POS, USE_CURRENT_POS, attr);
+                print_char(*p, USE_CURRENT_POS, USE_CURRENT_POS, attr);
+                break;
+            }
+        }
+    }
+
+    va_end(args);
+}
+
+void kprintf(char *fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+
+    char attr = WHITE_ON_BLACK;
+    for (char *p = fmt; *p; ++p) {
+        if (*p != '%') {
+            print_char(*p, USE_CURRENT_POS, USE_CURRENT_POS, attr);
+            continue;
+        }
+
+        ++p;
+        if (!*p) break;
+
+        switch (*p) {
+            case 's': {
+                char *s = va_arg(args, char*);
+                if (!s) s = "(null)";
+                kprint_color(s, attr);
+                break;
+            }
+            case 'd': {
+                s32 v = va_arg(args, s32);
+                char buf[16];
+                buf[0] = '\0';
+                int_to_ascii(v, buf);
+                kprint_color(buf, attr);
+                break;
+            }
+            case 'x': {
+                s32 v = va_arg(args, s32);
+                char buf[16];
+                buf[0] = '\0';
+                hex_to_ascii(v, buf);
+                kprint_color(buf, attr);
+                break;
+            }
+            case 'c': {
+                int c = va_arg(args, int);
+                print_char((char)c, USE_CURRENT_POS, USE_CURRENT_POS, attr);
+                break;
+            }
+            case '%': {
+                print_char('%', USE_CURRENT_POS, USE_CURRENT_POS, attr);
+                break;
+            }
+            default: {
+                print_char('%', USE_CURRENT_POS, USE_CURRENT_POS, attr);
+                print_char(*p, USE_CURRENT_POS, USE_CURRENT_POS, attr);
+                break;
+            }
+        }
+    }
+
+    va_end(args);
 }

@@ -2,7 +2,6 @@
 #include "idt.h"
 #include "../drivers/screen.h"
 #include "../drivers/keyboard.h"
-#include "../libc/string.h"
 #include "timer.h"
 #include "ports.h"
 #include "paging.h"
@@ -139,13 +138,8 @@ char *exception_messages[] = {
 
 void isr_handler(registers_t r) {
     if (r.int_no < 32) {
-        kprint("received interrupt: ");
-        char s[4];
-        int_to_ascii((s32)r.int_no, s);
-        kprint(s);
-        kprint("\n");
-        kprint(exception_messages[r.int_no]);
-        kprint("\n");
+        kprintf("received interrupt: %d\n", (s32)r.int_no);
+        kprintf("%s\n", exception_messages[r.int_no]);
         /* Halt on CPU exceptions to avoid infinite fault loops */
         asm volatile("cli; hlt");
     }

@@ -69,59 +69,23 @@ void mem(char *args) {
     u32 free_frames = get_free_frame_count();
     u32 total_frames = used_frames + free_frames;
     
-    kprint_color("Physical Memory (Frames):\n", get_input_color());
-    kprint_color("  Total: ", get_input_color());
-    int_to_ascii(total_frames, num_str);
-    kprint_color(num_str, get_input_color());
-    kprint_color(" frames (", get_input_color());
-    int_to_ascii((total_frames * 4), num_str);
-    kprint_color(num_str, get_input_color());
-    kprint_color(" KB)\n", get_input_color());
+    kprintf_color(get_input_color(), "Physical Memory (Frames):\n");
+    kprintf_color(get_input_color(), "  Total: %d frames (%d KB)\n", total_frames, total_frames * 4);
     
-    kprint_color("  Used:  ", get_input_color());
-    int_to_ascii(used_frames, num_str);
-    kprint_color(num_str, get_input_color());
-    kprint_color(" frames (", get_input_color());
-    int_to_ascii((used_frames * 4), num_str);
-    kprint_color(num_str, get_input_color());
-    kprint_color(" KB)\n", get_input_color());
+    kprintf_color(get_input_color(), "  Used:  %d frames (%d KB)\n", used_frames, used_frames * 4);
     
-    kprint_color("  Free:  ", get_input_color());
-    int_to_ascii(free_frames, num_str);
-    kprint_color(num_str, get_input_color());
-    kprint_color(" frames (", get_input_color());
-    int_to_ascii((free_frames * 4), num_str);
-    kprint_color(num_str, get_input_color());
-    kprint_color(" KB)\n", get_input_color());
+    kprintf_color(get_input_color(), "  Free:  %d frames (%d KB)\n", free_frames, free_frames * 4);
     
     /* Kernel heap */
     u32 heap_total, heap_used, heap_free;
     get_heap_stats(&heap_total, &heap_used, &heap_free);
     
-    kprint_color("\nKernel Heap:\n", get_input_color());
-    kprint_color("  Total: ", get_input_color());
-    int_to_ascii(heap_total, num_str);
-    kprint_color(num_str, get_input_color());
-    kprint_color(" bytes (", get_input_color());
-    int_to_ascii((heap_total / 1024), num_str);
-    kprint_color(num_str, get_input_color());
-    kprint_color(" KB)\n", get_input_color());
+    kprintf_color(get_input_color(), "\nKernel Heap:\n");
+    kprintf_color(get_input_color(), "  Total: %d bytes (%d KB)\n", heap_total, heap_total / 1024);
     
-    kprint_color("  Used:  ", get_input_color());
-    int_to_ascii(heap_used, num_str);
-    kprint_color(num_str, get_input_color());
-    kprint_color(" bytes (", get_input_color());
-    int_to_ascii((heap_used / 1024), num_str);
-    kprint_color(num_str, get_input_color());
-    kprint_color(" KB)\n", get_input_color());
+    kprintf_color(get_input_color(), "  Used:  %d bytes (%d KB)\n", heap_used, heap_used / 1024);
     
-    kprint_color("  Free:  ", get_input_color());
-    int_to_ascii(heap_free, num_str);
-    kprint_color(num_str, get_input_color());
-    kprint_color(" bytes (", get_input_color());
-    int_to_ascii((heap_free / 1024), num_str);
-    kprint_color(num_str, get_input_color());
-    kprint_color(" KB)\n", get_input_color());
+    kprintf_color(get_input_color(), "  Free:  %d bytes (%d KB)\n", heap_free, heap_free / 1024);
 }
 
 void unknown_command() {
